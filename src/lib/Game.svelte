@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte"
-  let { puzzle = $bindable(), puzzleNumber } = $props()
+  let { puzzle, puzzleNumber } = $props()
   let timer
   let time = $state(0)
   let lsItem = JSON.parse(localStorage.getItem('4faaf'))
@@ -11,16 +11,22 @@
 
   let guesses = $state(0)
 
-  if (lsItem && lsItem.p === puzzleNumber) {
-    time = lsItem.t
-    guesses = lsItem.g
-    score = lsItem.s
-    win = lsItem.w
-    for (let i = 0; i < puzzle.statements.length; i++) {
-      puzzle.statements[i].selected = lsItem.ss[i]
-      
+  let showInstructions = $state(true)
+
+  function loadFromStorage() {
+    if (lsItem && lsItem.p === puzzleNumber) {
+      time = lsItem.t
+      guesses = lsItem.g
+      score = lsItem.s
+      win = lsItem.w
+      showInstructions = false
+      for (let i = 0; i < puzzle.statements.length; i++) {
+        puzzle.statements[i].selected = lsItem.ss[i]
+      }
     }
   }
+
+  loadFromStorage()
 
   onMount(() => {
     if (win) {
@@ -55,7 +61,7 @@
   function copyScore() {
     let msg = `4 Facts and a Fib - Day ${puzzleNumber+1}
 ⏱️ ${time}s | 🎯 ${guesses} guesses | ⭐ ${score}pts
-games.techforge365.com/4factsandafib`
+4factsandafib.games.techforge365.com`
     
     navigator.clipboard.writeText(msg)
   }
