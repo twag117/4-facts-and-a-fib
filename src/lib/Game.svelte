@@ -1,6 +1,6 @@
 <script>
   import { onMount } from "svelte"
-  let { puzzle, puzzleNumber } = $props()
+  let { puzzle, puzzleNumber, showInstructions=$bindable() } = $props()
   let timer
   let time = $state(0)
   let lsItem = JSON.parse(localStorage.getItem('4faaf'))
@@ -10,8 +10,6 @@
   let win = $state(false)
 
   let guesses = $state(0)
-
-  let showInstructions = $state(true)
 
   function loadFromStorage() {
     if (lsItem && lsItem.p === puzzleNumber) {
@@ -73,6 +71,7 @@
   <header class="game-header">
     <h1>4 Facts and a Fib</h1>
     <p class="day-number">Day {puzzleNumber + 1}</p>
+    <button class="btn-open" onclick={() => showInstructions = true}>?</button>
   </header>
 
   <div class="stats-bar">
@@ -119,6 +118,7 @@
 .game-header {
   text-align: center;
   margin-bottom: 0.5rem;
+  position: relative;
 }
 
 .game-header h1 {
@@ -126,6 +126,28 @@
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--text);
+}
+
+.btn-open {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-open:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .day-number {
