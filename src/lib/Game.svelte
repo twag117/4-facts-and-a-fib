@@ -55,7 +55,7 @@
   function copyScore() {
     let msg = `4 Facts and a Fib - Day ${puzzleNumber+1}
 ⏱️ ${time}s | 🎯 ${guesses} guesses | ⭐ ${score}pts
-yourwebsite.com`
+games.techforge365.com/4factsandafib`
     
     navigator.clipboard.writeText(msg)
   }
