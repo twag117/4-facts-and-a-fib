@@ -1,7 +1,7 @@
 <script>
   import { puzzles } from "./data/puzzles";
   import Game from "./lib/Game.svelte";
-    import Instructions from "./lib/Instructions.svelte";
+  import Instructions from "./lib/Instructions.svelte";
 
   const puzzleStartDate = new Date('2026-03-01')
   const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate())

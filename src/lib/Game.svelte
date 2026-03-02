@@ -11,6 +11,8 @@
 
   let guesses = $state(0)
 
+  let feedbackMessage = $state('')
+
   function loadFromStorage() {
     if (lsItem && lsItem.p === puzzleNumber) {
       time = lsItem.t
@@ -18,6 +20,7 @@
       score = lsItem.s
       win = lsItem.w
       showInstructions = false
+      feedbackMessage = 'Keep trying! :)'
       for (let i = 0; i < puzzle.statements.length; i++) {
         puzzle.statements[i].selected = lsItem.ss[i]
       }
@@ -42,15 +45,16 @@
     // win con is selected = true for all except for fact = false.
     let truths = puzzle.statements.filter(s => s.fact === true)
     let fib = puzzle.statements.filter(s => s.fact === false)
-
     if ( !truths.find(t => t.selected === false) && fib.find(f => f.selected === false) ) {
       clearInterval(timer)
       score = 1000 - ( time<6 ? 0 : (time-5) * 3 ) - ( guesses===1 ? 0 : (guesses-1)*90 )
       win = true
     } else if (fib.find(f => f.selected === false)){
-      alert('Facts, but find more!')
+      // alert('Facts, but find more!')
+      feedbackMessage = '⚠️ You found some facts, but the fib is still out there!'
     } else {
-      alert('Keep trying :]')
+      // alert('Keep trying :]')
+      feedbackMessage = '⚠️ Not quite! Keep trying.'
     }
     localStorage.setItem('4faaf', JSON.stringify({p: puzzleNumber, t: time, g: guesses, s: score, w: win, ss: puzzle.statements.map(s => s.selected)}))
 
@@ -79,8 +83,18 @@
     <span>🎯 {guesses} guesses</span>
   </div>
 
+  {#if !win && guesses > 0}
+    {#key guesses}
+      <div class="feedback-banner">
+        <p>{feedbackMessage}</p>
+      </div>
+    {/key}
+  {/if}
+
   {#if win}
     <div class="win-banner">
+      <h2>🎉 You Win! 🎉</h2>
+      <p>You found all the facts!</p>
       <strong>⭐ {score} pts</strong>
     </div>
   {/if}
@@ -169,13 +183,37 @@
   color: var(--text-muted);
 }
 
-.win-banner {
+.feedback-banner {
   text-align: center;
   padding: 1rem;
+  background: var(--surface);
+  color: var(--fib);
+  border-radius: 8px;
+  font-size: 1rem;
+  border: 1px solid var(--fib);
+  margin-bottom: 1rem;
+  animation: shake 0.5s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+
+.win-banner {
+  text-align: center;
+  padding: 1.5rem;
   background: var(--accent);
   color: #ffffff;
   border-radius: 8px;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
+  animation: pulse 1s;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
 .statements {
